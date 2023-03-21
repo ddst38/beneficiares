@@ -2,6 +2,9 @@ package fr.cnam.beneficiaires;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.availability.AvailabilityChangeEvent;
+import org.springframework.boot.availability.LivenessState;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,18 @@ public class BeneficiairesApplication {
 	}
 }
 
+@Controller
+@ResponseBody
+class HealthController{
+	private final ApplicationContext context;
+	HealthController(ApplicationContext context){
+		this.context = context;
+	}
+	@GetMapping("/down")
+	void down(){
+		AvailabilityChangeEvent.publish(this.context, LivenessState.BROKEN);
+	}
+}
 
 @Controller
 @ResponseBody
