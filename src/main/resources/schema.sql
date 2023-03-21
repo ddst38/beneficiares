@@ -1,0 +1,1 @@
+create table beneficiaire (id serial primary key,nom varchar(255) not null)
