@@ -2,11 +2,16 @@ package fr.cnam.beneficiaires;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnCloudPlatform;
 import org.springframework.boot.availability.AvailabilityChangeEvent;
 import org.springframework.boot.availability.LivenessState;
+import org.springframework.boot.cloud.CloudPlatform;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +22,15 @@ public class BeneficiairesApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BeneficiairesApplication.class, args);
+	}
+}
+
+@Component
+@ConditionalOnCloudPlatform(CloudPlatform.KUBERNETES)
+class KS8Runner{
+	@EventListener(ApplicationReadyEvent.class)
+	public void run(){
+		System.out.println("Salut Kube !!");
 	}
 }
 
